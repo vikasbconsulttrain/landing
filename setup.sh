@@ -1,0 +1,30 @@
+sudo apt install -y unzip
+sudo apt update -y
+sudo apt install -y openjdk-21-jdk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+
+mkdir ~/nifi
+cd ~/nifi
+sudo wget -d https://dlcdn.apache.org/nifi/2.6.0/nifi-2.6.0-bin.zip
+
+unzip nifi-2.6.0-bin.zip
+#unzip /mnt/g/download/bin/nifi-2.6.0-bin.zip
+cd nifi-2.6.0
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64" >> bin/nifi-env.sh
+./bin/nifi.sh start
+sleep 90
+./bin/nifi.sh stop
+
+sed -i  '/nifi.remote.input.secure/d;/nifi.remote.input.http.enabled/d;/nifi.web.http.host/d;/nifi.web.http.port/d;/nifi.web.https.host/d;/nifi.web.https.port/d' conf/nifi.properties
+echo "nifi.remote.input.secure=false" >> conf/nifi.properties
+echo "nifi.remote.input.http.enabled=false" >> conf/nifi.properties
+echo "nifi.web.http.host=0.0.0.0" >> conf/nifi.properties
+echo "nifi.web.http.port=8080" >> conf/nifi.properties
+echo "nifi.web.https.host=" >> conf/nifi.properties
+echo "nifi.web.https.port=" >> conf/nifi.properties
+
+./bin/nifi.sh install
+sudo service nifi start
+
+sudo systemctl enable nifi
