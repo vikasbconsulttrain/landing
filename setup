@@ -24,7 +24,5 @@ echo "nifi.web.http.port=8080" >> conf/nifi.properties
 echo "nifi.web.https.host=" >> conf/nifi.properties
 echo "nifi.web.https.port=" >> conf/nifi.properties
 
-./bin/nifi.sh install
-sudo service nifi start
+./bin/nifi.sh start
 
-sudo systemctl enable nifi
